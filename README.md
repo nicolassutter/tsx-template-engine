@@ -1,3 +1,1 @@
-# Simple template for quickstarting a Node + TS app
-
-Do not forget to update your packages.
+# Allows the use of React-TSX as a Node template-engine
