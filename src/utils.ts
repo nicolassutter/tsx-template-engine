@@ -23,6 +23,8 @@ export const getProps = <T extends Payload>(payload: () => T) => {
 
   type Children = { children?: PropTypes.ReactNodeLike }
 
+  type Types = Required<InferProps<{ [Key in keyof T]: T[Key]['type'] }>>
+
   return {
     defaultProps: {
       children: undefined,
@@ -31,11 +33,11 @@ export const getProps = <T extends Payload>(payload: () => T) => {
 
     types: Object.fromEntries(
       Object.entries(params).map(([k, val]) => [k, val.type])
-    ) as InferProps<{ [Key in keyof T]: T[Key]['type'] }> & Children
+    ) as { [Key in keyof Types]: NonNullable<Types[Key]>} & Children
   }
 }
 
 /**
  * Renders to string a React component, and its props if required.
  */
-export const renderComponent = <C extends (...args: any[]) => JSX.Element>(component: C, ...args: Parameters<C>) => ReactDOMServer.renderToStaticMarkup(component(...args))
+export const renderComponent = <C extends (args: any) => JSX.Element>(component: C, args?: Parameters<C>[0]) => ReactDOMServer.renderToStaticMarkup(component(args))
